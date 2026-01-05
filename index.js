@@ -5,11 +5,10 @@
   license that can be found in the LICENSE file or at
   https://opensource.org/licenses/MIT.
 */
-import { disable } from './disable.js';
-import { enable } from './enable.js';
-import { isSupported } from './isSupported.js';
+import { CacheExpiration } from './CacheExpiration.js';
+import { ExpirationPlugin } from './ExpirationPlugin.js';
 import './_version.js';
 /**
- * @module workbox-navigation-preload
+ * @module workbox-expiration
  */
-export { disable, enable, isSupported };
+export { CacheExpiration, ExpirationPlugin };
