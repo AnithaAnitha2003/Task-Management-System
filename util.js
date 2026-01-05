@@ -1,16 +1,19 @@
-const util = require('./dist/util')
+'use strict';
 
-exports.findPair = util.findPair
-exports.toJSON = util.toJSON
-exports.parseMap = util.parseMap
-exports.parseSeq = util.parseSeq
+var resolveSeq = require('./resolveSeq-d03cb037.js');
+var PlainValue = require('./PlainValue-ec8e588e.js');
 
-exports.stringifyNumber = util.stringifyNumber
-exports.stringifyString = util.stringifyString
-exports.Type = util.Type
 
-exports.YAMLError = util.YAMLError
-exports.YAMLReferenceError = util.YAMLReferenceError
-exports.YAMLSemanticError = util.YAMLSemanticError
-exports.YAMLSyntaxError = util.YAMLSyntaxError
-exports.YAMLWarning = util.YAMLWarning
+
+exports.findPair = resolveSeq.findPair;
+exports.parseMap = resolveSeq.resolveMap;
+exports.parseSeq = resolveSeq.resolveSeq;
+exports.stringifyNumber = resolveSeq.stringifyNumber;
+exports.stringifyString = resolveSeq.stringifyString;
+exports.toJSON = resolveSeq.toJSON;
+exports.Type = PlainValue.Type;
+exports.YAMLError = PlainValue.YAMLError;
+exports.YAMLReferenceError = PlainValue.YAMLReferenceError;
+exports.YAMLSemanticError = PlainValue.YAMLSemanticError;
+exports.YAMLSyntaxError = PlainValue.YAMLSyntaxError;
+exports.YAMLWarning = PlainValue.YAMLWarning;

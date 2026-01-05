@@ -1,17 +1,23 @@
-const types = require('./dist/types')
+'use strict';
 
-exports.binaryOptions = types.binaryOptions
-exports.boolOptions = types.boolOptions
-exports.intOptions = types.intOptions
-exports.nullOptions = types.nullOptions
-exports.strOptions = types.strOptions
+var resolveSeq = require('./resolveSeq-d03cb037.js');
+var Schema = require('./Schema-88e323a7.js');
+require('./PlainValue-ec8e588e.js');
+require('./warnings-1000a372.js');
 
-exports.Schema = types.Schema
-exports.Alias = types.Alias
-exports.Collection = types.Collection
-exports.Merge = types.Merge
-exports.Node = types.Node
-exports.Pair = types.Pair
-exports.Scalar = types.Scalar
-exports.YAMLMap = types.YAMLMap
-exports.YAMLSeq = types.YAMLSeq
+
+
+exports.Alias = resolveSeq.Alias;
+exports.Collection = resolveSeq.Collection;
+exports.Merge = resolveSeq.Merge;
+exports.Node = resolveSeq.Node;
+exports.Pair = resolveSeq.Pair;
+exports.Scalar = resolveSeq.Scalar;
+exports.YAMLMap = resolveSeq.YAMLMap;
+exports.YAMLSeq = resolveSeq.YAMLSeq;
+exports.binaryOptions = resolveSeq.binaryOptions;
+exports.boolOptions = resolveSeq.boolOptions;
+exports.intOptions = resolveSeq.intOptions;
+exports.nullOptions = resolveSeq.nullOptions;
+exports.strOptions = resolveSeq.strOptions;
+exports.Schema = Schema.Schema;
