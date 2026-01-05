@@ -1,16 +1,15 @@
 /*
-  Copyright 2019 Google LLC
-
-  Use of this source code is governed by an MIT-style
-  license that can be found in the LICENSE file or at
-  https://opensource.org/licenses/MIT.
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
 */
-import { messageSW } from './messageSW.js';
-import { Workbox } from './Workbox.js';
-import './_version.js';
-/**
- * @module workbox-window
- */
-export { messageSW, Workbox };
-// See https://github.com/GoogleChrome/workbox/issues/2770
-export * from './utils/WorkboxEvent.js';
+exports.Source = require("./Source");
+
+exports.RawSource = require("./RawSource");
+exports.OriginalSource = require("./OriginalSource");
+exports.SourceMapSource = require("./SourceMapSource");
+exports.LineToLineMappedSource = require("./LineToLineMappedSource");
+
+exports.CachedSource = require("./CachedSource");
+exports.ConcatSource = require("./ConcatSource");
+exports.ReplaceSource = require("./ReplaceSource");
+exports.PrefixSource = require("./PrefixSource");
