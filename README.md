@@ -1,36 +1,72 @@
-# Validate XML Names and Qualified Names
+write-file-atomic
+-----------------
 
-This package simply tells you whether or not a string matches the [`Name`](http://www.w3.org/TR/xml/#NT-Name) or [`QName`](http://www.w3.org/TR/xml-names/#NT-QName) productions in the XML Namespaces specification. We use it for implementing the [validate](https://dom.spec.whatwg.org/#validate) algorithm in jsdom, but you can use it for whatever you want.
+This is an extension for node's `fs.writeFile` that makes its operation
+atomic and allows you set ownership (uid/gid of the file).
 
-## Usage
+### var writeFileAtomic = require('write-file-atomic')<br>writeFileAtomic(filename, data, [options], [callback])
 
-This package's main module's default export takes a string and will return an object of the form `{ success, error }`, where `success` is a boolean and if it is `false`, then `error` is a string containing some hint as to where the match went wrong.
+* filename **String**
+* data **String** | **Buffer**
+* options **Object** | **String**
+  * chown **Object** default, uid & gid of existing file, if any
+    * uid **Number**
+    * gid **Number**
+  * encoding **String** | **Null** default = 'utf8'
+  * fsync **Boolean** default = true
+  * mode **Number** default, from existing file, if any
+  * tmpfileCreated **Function** called when the tmpfile is created
+* callback **Function**
 
-```js
-"use strict":
-var xnv = require("xml-name-validator");
-var assert = require("assert");
+Atomically and asynchronously writes data to a file, replacing the file if it already
+exists.  data can be a string or a buffer.
 
-// Will return { success: true, error: undefined }
-xnv.name("x");
-xnv.name(":");
-xnv.name("a:0");
-xnv.name("a:b:c");
+The file is initially named `filename + "." + murmurhex(__filename, process.pid, ++invocations)`.
+Note that `require('worker_threads').threadId` is used in addition to `process.pid` if running inside of a worker thread.
+If writeFile completes successfully then, if passed the **chown** option it will change
+the ownership of the file. Finally it renames the file back to the filename you specified. If
+it encounters errors at any of these steps it will attempt to unlink the temporary file and then
+pass the error back to the caller.
+If multiple writes are concurrently issued to the same file, the write operations are put into a queue and serialized in the order they were called, using Promises. Writes to different files are still executed in parallel.
 
-// Will return { success: false, error: <an explanatory string> }
-xnv.name("\\");
-xnv.name("'");
-xnv.name("0");
-xnv.name("a!");
+If provided, the **chown** option requires both **uid** and **gid** properties or else
+you'll get an error.  If **chown** is not specified it will default to using
+the owner of the previous file.  To prevent chown from being ran you can
+also pass `false`, in which case the file will be created with the current user's credentials.
 
-// Will return { success: true, error: undefined }
-xnv.qname("x");
-xnv.qname("a0");
-xnv.qname("a:b");
+If **mode** is not specified, it will default to using the permissions from
+an existing file, if any.  Expicitly setting this to `false` remove this default, resulting
+in a file created with the system default permissions.
 
-// Will return { success: false, error: <an explanatory string> }
-xnv.qname(":a");
-xnv.qname(":b");
-xnv.qname("a:b:c");
-xnv.qname("a:0");
+If options is a String, it's assumed to be the **encoding** option. The **encoding** option is ignored if **data** is a buffer. It defaults to 'utf8'.
+
+If the **fsync** option is **false**, writeFile will skip the final fsync call.
+
+If the **tmpfileCreated** option is specified it will be called with the name of the tmpfile when created.
+
+Example:
+
+```javascript
+writeFileAtomic('message.txt', 'Hello Node', {chown:{uid:100,gid:50}}, function (err) {
+  if (err) throw err;
+  console.log('It\'s saved!');
+});
 ```
+
+This function also supports async/await:
+
+```javascript
+(async () => {
+  try {
+    await writeFileAtomic('message.txt', 'Hello Node', {chown:{uid:100,gid:50}});
+    console.log('It\'s saved!');
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
+})();
+```
+
+### var writeFileAtomicSync = require('write-file-atomic').sync<br>writeFileAtomicSync(filename, data, [options])
+
+The synchronous version of **writeFileAtomic**.
